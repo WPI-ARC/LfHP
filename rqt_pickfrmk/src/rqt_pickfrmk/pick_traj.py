@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-
+# Rqt plugin that provides GUI to perform trajectory comparison. Two trajectories are
+# randomly chosen from the trajectory pool and the pairwise comparison is performed.
+# The process of ranking using the merge sort intuition and repeat the comparison 
+# procedure until the ranking is generated.
 #   Author: Artem Gritsenko
 
 from __future__ import division
@@ -123,32 +126,23 @@ class Top(Plugin):
         self._layout.addWidget(self._pick_none_btn)
         self._pick_none_btn.clicked.connect(self._pick_none)
 
-        #self._pick_none_btn.clicked.connect(self._pick_traj)
 
     def merge_traj_files(self):
         print "___________________________________________"
         if self.merge_width < self.length:
             print "Width = %f" % self.merge_width
-            #print self.work_list
-
             if self.merge_ind < self.length:
-
                 print "Merge index = %f" % self.merge_ind
                 # take pair of sublists and merge them
-
                 while True:
-
                     if self._j < min(self.merge_ind + 2 * self.merge_width, self.length):
-
                         if (self._i0 < min(self.merge_ind + self.merge_width, self.length)):
-
                                 if self._i1 >= min(self.merge_ind + 2*self.merge_width, self.length):
                                     self.work_list[self._j] = self.traj_list[self._i0]
                                     print "it's here 1"
                                     print "B %f assigned A %f" % (self._j, self._i0)
                                     self._i0 += 1
                                     self.valid_comp = False
-
                                 else:
                                     if self.valid_comp:
                                         if self.comp_res:
@@ -164,36 +158,17 @@ class Top(Plugin):
                                             print "B %f assigned A %f" % (self._j, self._i1)
                                             self._i1 += 1
                                             self.valid_comp = False
-
                                     else:
                                         self.merge()
                                         break
-                                    #self.merge_traj_files()
-#                                    self.work_list[self._j] = self.traj_list[self._i1]
-#                                    self._i1 += 1
-#                                    self.valid_comp = False
-
                         else:
                             self.work_list[self._j] = self.traj_list[self._i1]
                             print "it's here 4"
                             print "B %f assigned A %f" % (self._j, self._i1)
                             self._i1 += 1
                             self.valid_comp = False
-
                         self._j += 1
-
-#                            else:
-#                                print "1"
-#                                # self.merge()
-#                                break
-#                        else:
-#                            print "B %f assigned A %f" % (self._j, self._i1)
-#                            self.work_list[self._j] = self.traj_list[self._i1]
-#                            self._i1 += 1
-
-                        
                     else:
-                        
                         self.merge_ind = self.merge_ind + 2 * self.merge_width
                         self._i0 = self.merge_ind
                         self._i1 = min(self.merge_ind + self.merge_width, self.length)
@@ -207,7 +182,6 @@ class Top(Plugin):
                         #self.work_list = temp
                         #self.merge_traj_files()
                         break
-
             else:
                 # copyArray()
                 temp = copy.deepcopy(self.traj_list)
@@ -229,6 +203,7 @@ class Top(Plugin):
                 f_.write("%s\n" % item)
             f_.close()
 
+
     def merge(self):
         print self._i0
         print self._i1
@@ -245,6 +220,7 @@ class Top(Plugin):
         print " new files assigned are: %s, %s " % (self.fileA, self.fileB)
         
 
+
     def _play_traj_A(self):
         if (self.paused):
             self._pause_btn.setText("Pause current trajectory")
@@ -252,10 +228,12 @@ class Top(Plugin):
         req = UiState(Header(), self.fileA, True, False,-1)
         resp = self.play_traj(req)
 
+
     def _change_slider_A(self):
         self._slider_B.setValue(0)
         req = UiState(Header(), self.fileA, False, True, float(self._slider_A.value()))
         resp = self.play_traj(req)
+
 
     def _play_traj_B(self):
         if (self.paused):
@@ -264,10 +242,12 @@ class Top(Plugin):
         req = UiState(Header(), self.fileB, True, False,-1)
         resp = self.play_traj(req)
 
+
     def _change_slider_B(self):
         self._slider_A.setValue(0)
         req = UiState(Header(), self.fileB, False, True, float(self._slider_B.value()))
         resp = self.play_traj(req)
+
 
     def _pause_traj(self):
         if (self.paused):
@@ -283,49 +263,21 @@ class Top(Plugin):
 
 
     def _pick_traj_A(self):
-#        self.write_to_file = self.fileA + "," +self.fileB + "\n"
-#        f = open(rospy.get_param('traj_dir')+"/../resuls.txt",'a')
-#        f.write(self.write_to_file)
-#        f.close()
-#        self.rand_traj_files()
-
-#        self.work_list[self._j] = self.traj_list[self._i0]
-#        self._i0 += 1
-#        self._j += 1
-        
         self.comp_res = True
         self.valid_comp = True
-        
-#        print self.traj_list
-#        print self.work_list
-#        sys.stdin.readline()
-
         self.merge_traj_files()
 
     def _pick_traj_B(self):
-#        self.write_to_file = self.fileB + "," +self.fileA + "\n"
-#        f = open(rospy.get_param('traj_dir')+"/../resuls.txt",'a')
-#        f.write(self.write_to_file)
-#        f.close()
-#        self.rand_traj_files()
-
         self.comp_res = False
         self.valid_comp = True
-
-#        self.work_list[self._j] = self.traj_list[self._i1]
-#        self._i1 += 1
-#        self._j += 1
-
-#        print self.traj_list
-#        print self.work_list
-#        sys.stdin.readline()
-
         self.merge_traj_files()
+
 
     def _pick_none(self):
         #reinvoke the traj ranodm generator
         self.rand_traj_files()
     
+
     # produce two new filenames from the trajectory directory
     def rand_traj_files(self):
         first_to_pick = random.randint(0,len(self.traj_list)-1)

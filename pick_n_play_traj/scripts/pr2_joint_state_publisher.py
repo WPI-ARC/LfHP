@@ -1,6 +1,7 @@
 #!/usr/bin/python
 #
 #   Author: Artem Gritsenko
+#   State publisher to display the trajectories queried by the rqt_pickfrmk in RViz.
 #
 #   Joints / Openrave indecies / Ros indecies 
 #   r_shoulder_pan_joint                                     27           19
@@ -35,7 +36,7 @@ class JointStatePublisher:
         self.latest_state = None
         self.last_time = rospy.get_time()
         self.listener = tf.TransformListener()
-        # Create all the joints based off of the URDF and assign them joint limits
+        # Create all the joints based on the URDF and assign them joint limits
         # based on their properties
         for child in robot.childNodes:
             if child.nodeType is child.TEXT_NODE:
@@ -57,7 +58,6 @@ class JointStatePublisher:
                     zeroval = (maxval + minval)/2
                 else:
                     zeroval = 0
-
                 joint = {'min':minval, 'max':maxval, 'zero':zeroval, 'value':zeroval }
                 self.free_joints[name] = joint
         #Setup the PR2State subscriber
@@ -69,6 +69,8 @@ class JointStatePublisher:
         #Setup the object publisher
         self.object_pub = rospy.Publisher(rospy.get_namespace() + "visualization_marker_array", MarkerArray)
 
+
+    # Update the status of trajectory displaying process
     def commands_cb(self,msg):
         self.cmds = msg.commands
         self.play = msg.commands.play
@@ -79,9 +81,10 @@ class JointStatePublisher:
             self.traj_given = True
         #rospy.logdebug( "Commands : %s", self.cmds )
         rospy.logdebug( "Filename : %s", msg.commands.traj_id )
-        
         return "NO ERROR"
 
+
+    # Get the updated pr2 state
     def pr2_cb(self, msg):
         new_state = {}
         try:
@@ -93,16 +96,13 @@ class JointStatePublisher:
             rospy.logerr("*** Malformed PR2State! ***")
         self.last_time = rospy.get_time()
 
+
+    # staticly spawn the objects into RViz environment
     def spawn_objects(self):
         now = rospy.Time.now()
-        #self.listener.waitForTransform("/base_link", "/l_gripper_motor_slider_link", now, rospy.Duration(4.0) )
-        #p1, q1 = self.listener.lookupTransform( '/base_link', "/l_gripper_motor_slider_link" , now)
-
-        #print q1
-
         rate = rospy.Rate(40.0)
-#stuff for experiment 1 and experiment 3
 
+        # stuff for experiment 1 and experiment 3
         # msg1 = Marker()
         # msg1.header.frame_id = "base_link"
         # msg1.header.stamp = rospy.Time.now()
@@ -162,8 +162,7 @@ class JointStatePublisher:
         msg2.scale.y = 1. * 0.05
         msg2.scale.z = 1. * 0.1
 
-# stuff for nut
-
+#        stuff for nut
 #        msg2.pose.position.x = 0.2
 #        msg2.pose.position.y = 0.
 #        msg2.pose.position.z = 0.2
@@ -185,7 +184,7 @@ class JointStatePublisher:
 
 #        msg2.mesh_resource = "package://heres_how/models/nut.dae"
 
-# block for experiment 2
+#        block for experiment 2
 #
 #         msg3 = Marker()
 #         msg3.header.frame_id = "base_link"
@@ -217,7 +216,7 @@ class JointStatePublisher:
 
         #msg3.mesh_resource = "package://heres_how/models/Car/meshes/car.dae"
 
-# block for experiment 2
+#       block for experiment 2
         # msg4 = Marker()
         # msg4.header.frame_id = "base_link"
         # msg4.header.stamp = rospy.Time.now()
@@ -384,14 +383,14 @@ class JointStatePublisher:
         markerArray.markers.append( msg7 )
         markerArray.markers.append( msg8 )
         markerArray.markers.append( msg9 )
-
-
         if len(markerArray.markers) > 0:
             self.object_pub.publish(markerArray)
 
+
+    # main loop that handles updating the environemnt (and robot configuration)
     def loop(self, hz=20.):
         r = rospy.Rate(hz) 
-        pub = read_traj()
+        pub = TrajReader()
         traj = RaveCreateTrajectory( pub.env, '' )
 
         joint_values = [0.]*45
@@ -401,7 +400,6 @@ class JointStatePublisher:
         self.traj_given = False
         self.slider_value = -1
         
-       
         # Publish Joint States
         while not rospy.is_shutdown():
             if (not self.pause):
@@ -463,26 +461,21 @@ class JointStatePublisher:
             r.sleep()
             #rospy.logdebug("loop %f" % rospy.Time.now().to_sec() )
 
-class read_traj():
 
+class TrajReader():
     def __init__(self):
-
         self.env = Environment()
         # self.env.SetViewer('qtcoin')
         self.env.Reset()
-
         self.env.Load('robots/pr2-beta-static.zae')
         self.env.Load('data/shelf.kinbody.xml')
-
         shelf = None
         for b in self.env.GetBodies() :
             if  b.GetName() == "Shelf":
                 shelf = b
         if shelf is not None:
             shelf.SetTransform( array( MakeTransform( rodrigues([-pi/2,0,0]), matrix([0.7,-0.5,0]) ) ) )
-
         self.robot = self.env.GetRobots()[0]
-
         self.robot.SetActiveManipulator(1)
         self.indices = self.robot.GetActiveManipulator().GetArmIndices()
         self.robot.SetActiveDOFs( self.indices )
@@ -490,11 +483,9 @@ class read_traj():
 
 if __name__ == '__main__':
     rospy.init_node('pr2_joint_state_publisher',log_level=rospy.DEBUG)
-    #rospy.set_param('traj_file', '/home/artemgritsenko/catkin_ws/src/heres_how/scripts/trajectoryB.txt')
     description_file = rospy.get_param("robot_description")
     publish_rate = rospy.get_param("~rate", 20.0)
     jsp = JointStatePublisher(description_file)
     jsp.spawn_objects()
-    #sys.stdin.readline()
     jsp.loop(publish_rate)
 
