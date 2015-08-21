@@ -1,0 +1,11 @@
+<launch>
+
+   <node name="joint_state_publisher" pkg="pick_n_play_traj" type="pr2_joint_state_publisher.py" output="screen">
+    <remap from="/tf" to="/tf" />
+    <param name="rate" type="double" value="10" />
+  </node>
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" >
+      <remap from="/tf" to="/tf" />
+    </node>
+
+</launch>

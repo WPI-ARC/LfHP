@@ -1,0 +1,118 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<kml xmlns='http://earth.google.com/kml/2.1'>
+<Folder>
+    <name>Rusted_Robot</name>
+    <description><![CDATA[Created with <a href="http://sketchup.google.com/">Google SketchUp 6.4.112</a>]]></description>
+    <DocumentSource>SketchUp</DocumentSource>
+<visibility>1</visibility>
+<LookAt>
+<heading>28.9027</heading>
+<tilt>83.7927</tilt>
+<latitude>40.01664149286872</latitude>
+<longitude>-105.2832285541886</longitude>
+<range>126.8675097734728</range>
+<altitude>13.77163406621961</altitude>
+</LookAt>
+<Folder>
+<name>Tour</name>
+<Placemark>
+<name>Scene 1</name>
+<visibility>1</visibility>
+<LookAt>
+<heading>28.9027</heading>
+<tilt>83.7927</tilt>
+<latitude>40.01664149286872</latitude>
+<longitude>-105.2832285541886</longitude>
+<range>126.8675097734728</range>
+<altitude>13.77163406621961</altitude>
+</LookAt>
+</Placemark>
+<Placemark>
+<name>Scene 2</name>
+<visibility>1</visibility>
+<LookAt>
+<heading>58.9221</heading>
+<tilt>76.1201</tilt>
+<latitude>40.01682321485545</latitude>
+<longitude>-105.283312765624</longitude>
+<range>60.56086368540667</range>
+<altitude>14.81833805616241</altitude>
+</LookAt>
+</Placemark>
+<Placemark>
+<name>Scene 3</name>
+<visibility>1</visibility>
+<LookAt>
+<heading>307.294</heading>
+<tilt>66.9534</tilt>
+<latitude>40.01692139716475</latitude>
+<longitude>-105.2828426980738</longitude>
+<range>26.69902756703463</range>
+<altitude>11.05234172446855</altitude>
+</LookAt>
+</Placemark>
+<Placemark>
+<name>Scene 4</name>
+<visibility>1</visibility>
+<LookAt>
+<heading>7.16377</heading>
+<tilt>80.6128</tilt>
+<latitude>40.0169258187132</latitude>
+<longitude>-105.2830007289706</longitude>
+<range>82.469927620717</range>
+<altitude>13.57290406587949</altitude>
+</LookAt>
+</Placemark>
+<Placemark>
+<name>Scene 5</name>
+<visibility>1</visibility>
+<LookAt>
+<heading>135.778</heading>
+<tilt>77.531</tilt>
+<latitude>40.01705726806772</latitude>
+<longitude>-105.2830691285727</longitude>
+<range>73.45343150174347</range>
+<altitude>16.1142558394677</altitude>
+</LookAt>
+</Placemark>
+<Placemark>
+<name>Scene 6</name>
+<visibility>1</visibility>
+<LookAt>
+<heading>32.1398</heading>
+<tilt>88.2913</tilt>
+<latitude>40.01694088704615</latitude>
+<longitude>-105.2830433154833</longitude>
+<range>508.3869094511471</range>
+<altitude>15.16324668625471</altitude>
+</LookAt>
+</Placemark>
+</Folder>
+  <Placemark>
+    <name>Model</name>
+    <description><![CDATA[]]></description>
+    <Style id='default'>
+    </Style>
+    <Model>
+        <altitudeMode>relativeToGround</altitudeMode>
+        <Location>
+            <longitude>-105.283000000000</longitude>
+            <latitude>40.017000000000</latitude>
+            <altitude>0.000000000000</altitude>
+        </Location>
+        <Orientation>
+            <heading>0</heading>
+            <tilt>0</tilt>
+            <roll>0</roll>
+        </Orientation>
+        <Scale>
+            <x>1.0</x>
+            <y>1.0</y>
+            <z>1.0</z>
+        </Scale>
+        <Link>
+            <href>models/Rusted_Robot.dae</href>
+        </Link>
+    </Model>
+  </Placemark></Folder>
+</kml>

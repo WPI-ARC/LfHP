@@ -1,0 +1,11 @@
+<launch>
+
+   <node name="joint_state_publisher" pkg="heres_how" type="pr2_change_js.py" output="screen">
+    <remap from="/tf" to="/tf" />
+    <param name="rate" type="double" value="10" />
+  </node>
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" >
+      <remap from="/tf" to="/tf" />
+    </node>
+
+</launch>
