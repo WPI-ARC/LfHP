@@ -1,9 +1,9 @@
 <launch>
 
-    <param name="robot_description" textfile="$(find heres_how)/models/pr2.urdf" />
+    <param name="robot_description" textfile="$(find pick_n_play_traj)/models/pr2.urdf" />
 
     <param name="traj_dir" value="$(find rqt_pickfrmk)/trajectories" />
-    <include file="$(find heres_how)/launch/jsp.launch" />
+    <include file="$(find pick_n_play_traj)/launch/jsp.launch" />
 
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find pick_n_play_traj)/models/model2.rviz"/>
 
